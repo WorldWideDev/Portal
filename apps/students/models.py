@@ -48,9 +48,10 @@ class Student(models.Model):
 class Alias(models.Model):
     handle = models.CharField(max_length=100)
     source = models.CharField(max_length=100)
-    student = models.ForeignKey(Student)
+    student = models.ForeignKey(Student, related_name='aliases')
 
 class Note(models.Model):
     content = models.TextField()
-    student = models.ForeignKey(Student)
+    student = models.ForeignKey(Student, related_name='notes')
+    created_at = models.DateTimeField(auto_now=True)
     instructor = models.ForeignKey(Instructor)

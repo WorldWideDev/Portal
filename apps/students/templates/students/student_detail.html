@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load staticfiles %}
+		<link rel="stylesheet" href="{% static '/css/main.css' %}" media="screen">
+    </head>
+    <body>
+        <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+        <h3>{{ student.email }}</h3>
+        <ul>
+            <li><span>Status:</span> {{ student.status }}</li>
+            <li><span>Current Session:</span> {{ student.current_session }}</li>
+            <li><span>Next Session:</span>X</li>
+            <li><span>Rollbacks:</span>X</li>
+        </ul>
+        <h4>Session History</h4>
+        <ul>
+            {% for session in student.session_history.all %}
+            <li>{{ session }}</li>
+            {% endfor %}
+        </ul>
+        <h4>Aliases</h4>
+        <ul>
+            {% for alias in student.aliases.all %}
+            <li><span>{{ alias.source }}</span> {{ alias.handle }}</li>
+            {% endfor %}
+        </ul>
+        <h5>Add Alias</h5>
+        <form action="{% url 'students:create_alias' student.id %}" method="POST"\>{% csrf_token %}
+            {{ alias_form.as_p }}
+            <input type="submit" value="Add Alias">
+        </form>
+         <form action="{% url 'students:create_note' student.id %}" method="POST"\>{% csrf_token %}
+            {{ note_form.as_p }}
+            <input type="submit" value="Add Note">
+        </form>
+        <div class='notes'>
+            {% for note in student.notes.all %}
+                <div class="note">
+                    <h6>{{note.content}}</h6>
+                    <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
+                </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

@@ -5,18 +5,20 @@ from django.contrib.auth import authenticate, get_user_model, login, logout, vie
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, reverse, HttpResponseRedirect
+from privateviews.decorators import login_not_required
 
 
 LOGIN_TEMPLATE = 'login/index.html'
 # DASHBOARD_TEMPLATE = 'login/dashboard.html'
 
-# Create your views here.
+# @login_not_required
 def index(req):
     context = {
         'form': AuthenticationForm()
     }
     return render(req, LOGIN_TEMPLATE, context)
 
+# @login_not_required
 def login_instructor(req):
     print req
     submitted = AuthenticationForm(data=req.POST)
@@ -33,9 +35,3 @@ def login_instructor(req):
 def log_out(req):
     logout(req)
     return redirect('/')
-
-#NOTE(Devon): this will get moved to some other app as we flesh out the app spec
-#             testing the login_required feature
-# @login_required
-# def dashboard(req):
-#     return reverse("students:index")

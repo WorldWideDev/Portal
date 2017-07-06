@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.views.generic import View
+from django.views.generic import View, DetailView
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from .forms import CreateStudentForm
+from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm
+from django.contrib.auth import get_user_model
 from .view_helpers import set_context
+from .models import Student
 
 INDEX_TEMPLATE = 'students/index.html'
+DETAILS_TEMPLATE = 'students/student_detail.html'
 DEFAULT_STUDENT_FILTER = 'active'
 
-class StudentView(View):
+class StudentsView(View):
 
     def get(self, req, filter=DEFAULT_STUDENT_FILTER):
 
@@ -23,7 +26,63 @@ class StudentView(View):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse("students:index"))
-        context["form"] = form 
         return render(req, INDEX_TEMPLATE, context)        
+        context["form"] = form 
 
 
+class StudentDetailsView(DetailView):
+    model = Student
+    def get_context_data(self, *args, **kwargs):
+        print self.template_name
+        context = super(StudentDetailsView, self).get_context_data(*args, **kwargs)
+        context['alias_form'] = CreateAliasForm()
+        context['note_form'] = CreateNoteForm()
+        return context
+
+    def post(self, req, pk):
+        context = {
+            "student": Student.objects.get(pk=pk)
+        }
+        form = CreateAliasForm(req.POST)
+        if form.is_valid():
+            alias = form.save(commit=False)
+            alias.student_id = pk
+            alias.save()
+        else:
+            context["alias_form"] = CreateAliasForm(req.POST)
+
+            return render(req, DETAILS_TEMPLATE, context)
+        return HttpResponseRedirect(reverse("students:details", kwargs={'pk':pk}))
+
+def create_alias(req, pk):
+    if req.POST:
+        context = {
+            "student": Student.objects.get(pk=pk),
+            "note_form": CreateNoteForm()
+        }
+        form = CreateAliasForm(req.POST)
+        if form.is_valid():
+            alias = form.save(commit=False)
+            alias.student_id = pk
+            alias.save()
+        else:
+            context["alias_form"] = form
+            return render(req, DETAILS_TEMPLATE, context)
+        return HttpResponseRedirect(reverse("students:details", kwargs={'pk':pk}))
+
+def create_note(req, pk):
+    if req.POST:
+        context = {
+            "student": Student.objects.get(pk=pk),
+            "alias_form": CreateNoteForm()
+        }
+        form = CreateNoteForm(req.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.student_id = pk
+            note.instructor_id = req.user.id
+            note.save()
+        else:
+            context["note_form"] = form
+            return render(req, DETAILS_TEMPLATE, context)
+        return HttpResponseRedirect(reverse("students:details", kwargs={'pk':pk}))

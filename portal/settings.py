@@ -53,6 +53,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# MIDDLEWARE_CLASSES = [
+#     'privateviews.middleware.LoginRequiredMiddleware',
+# ]
+
 ROOT_URLCONF = 'portal.urls'
 
 TEMPLATES = [
