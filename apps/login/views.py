@@ -4,11 +4,11 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth import authenticate, get_user_model, login, logout, views as authviews
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, HttpResponseRedirect
 
 
 LOGIN_TEMPLATE = 'login/index.html'
-DASHBOARD_TEMPLATE = 'login/dashboard.html'
+# DASHBOARD_TEMPLATE = 'login/dashboard.html'
 
 # Create your views here.
 def index(req):
@@ -22,9 +22,9 @@ def login_instructor(req):
     submitted = AuthenticationForm(data=req.POST)
     if submitted.is_valid():
         user = submitted.get_user()
-        print user
-        login(req, user)
-        return redirect('/dashboard')
+        #login(req, user)
+        return HttpResponseRedirect(reverse('students:index'))
+        # return reverse_lazy("students:index")
     context = {
         "form": submitted
     }
@@ -36,6 +36,6 @@ def log_out(req):
 
 #NOTE(Devon): this will get moved to some other app as we flesh out the app spec
 #             testing the login_required feature
-@login_required
-def dashboard(req):
-    return render(req, DASHBOARD_TEMPLATE)
+# @login_required
+# def dashboard(req):
+#     return reverse("students:index")

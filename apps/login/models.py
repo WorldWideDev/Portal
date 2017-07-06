@@ -81,4 +81,4 @@ class Instructor(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser
 
     def __unicode__(self):
-        return self.email
+        return "{} {}".format(self.first_name, self.last_name)
