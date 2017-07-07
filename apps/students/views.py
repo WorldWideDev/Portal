@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.views.generic import View, DetailView
+from django.core.cache import cache
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm
+from django.views.generic import View, DetailView
 from django.contrib.auth import get_user_model
-from .view_helpers import set_context
+from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm
+from .view_helpers import set_context, update_student_cache
 from .models import Student
 
 INDEX_TEMPLATE = 'students/index.html'
 DETAILS_TEMPLATE = 'students/student_detail.html'
 DEFAULT_STUDENT_FILTER = 'active'
+STUDENTS_CACHE_KEY = "all_students"
 
 class StudentsView(View):
 
@@ -25,6 +27,7 @@ class StudentsView(View):
         form = CreateStudentForm(req.POST)
         if form.is_valid():
             form.save()
+            update_student_cache()
             return HttpResponseRedirect(reverse("students:index"))
         return render(req, INDEX_TEMPLATE, context)        
         context["form"] = form 

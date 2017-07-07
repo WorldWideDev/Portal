@@ -4,14 +4,6 @@ from django.db import models
 from ..course_sessions.models import Session, Cohort
 from ..login.models import Instructor
 
-class StudentManager(models.Manager):
-    def student_filter(self, **kwargs):
-        print kwargs['filter']
-        if str(kwargs['filter']) != 'all':
-            print 'not all'
-            return self.filter(status=str(kwargs['filter']))
-        return self.all()
-
 class Student(models.Model):
     ACTIVE = 'active'
     PAUSED = 'paused'
@@ -42,8 +34,6 @@ class Student(models.Model):
 
     def __unicode__(self):
         return self.email
-
-    objects = StudentManager()
 
 class Alias(models.Model):
     handle = models.CharField(max_length=100)
