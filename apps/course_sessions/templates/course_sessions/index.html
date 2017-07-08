@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load staticfiles %}
+		<link rel="stylesheet" href="{% static '/css/main.css' %}" media="screen">
+    </head>
+    <body>
+        {% load student_session_tags %}
+        <h1>Manage Sessions for {{ session_start }}</h1>
+        <span>{% if prev_id %}<a href="{% url 'sessions:index_pattern' prev_id %}">Prev</a>{% endif %} | {% if next_id %}<a href="{% url 'sessions:index_pattern' next_id %}">Next</a>{% endif %}</span>
+        <form action='{% url "sessions:update_session" %}' method="POST">{% csrf_token %}
+            <label for="start_date">Select a Session</label>
+            <select name='session'>
+                {% for sesh in sessions %}
+                <option value="{{sesh.id}}">{{ sesh }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name='cohort_id' value='{{ session_start.id }}'>
+            <ul>
+                <li><a href="{% url 'sessions:index_filter' session_start.id ass_filter.0 %}">Unassigned</a></li>
+                <li><a href="{% url 'sessions:index_filter' session_start.id ass_filter.1 %}">Assigned</a></li>
+            </ul>
+            {% if messages %}
+                {% for m in messages %}
+                <p>{{ m }}</p>
+                {% endfor %}
+            {% endif %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Currently Assigned</th>
+                        <th>Assign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
+                        <td>{% assigned_session student.id session_start.id %}</td>
+                        <td><input type="checkbox" name="to_assign" value="{{ student.id }}"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if sessions|length > 0 %}
+            <input type="submit" value="Assign Student(s)">
+            {% endif %}
+        </form>
+    </body>
+    <!--<script src="{% static 'course_sessions/js/date_update.js' %}"></script>-->
+</html>

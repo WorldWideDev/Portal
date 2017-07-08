@@ -4,13 +4,34 @@ from django.db import models
 from ..course_sessions.models import Session, Cohort
 from ..login.models import Instructor
 
+# might consider making this a query set class rather than manager
 class StudentManager(models.Manager):
     def student_filter(self, **kwargs):
-        print kwargs['filter']
         if str(kwargs['filter']) != 'all':
-            print 'not all'
             return self.filter(status=str(kwargs['filter']))
         return self.all()
+
+    def add_to_session(self, data):
+        students = data.getlist('to_assign')
+        sesh_id = int(data['session'])
+        co_id = int(data['cohort_id'])
+        for s in students:
+            student = self.get(id=s)
+
+            # remove sessions that conflict with new session start date
+            conflict = student.session_history.filter(start_date_id=co_id).first()
+            if conflict:
+                student.session_history.remove(conflict)
+
+            student.session_history.add(sesh_id)
+
+    def assignment_filter(self, filter_kw, start_id):
+        return self.filter(session_history__start_date_id = start_id) \
+            if str(filter_kw) == "assigned" else \
+            self.exclude(session_history__start_date_id = start_id)
+
+    
+
 
 class Student(models.Model):
     ACTIVE = 'active'
@@ -39,6 +60,12 @@ class Student(models.Model):
 
     def last_session(self):
         return self.session_history.last()
+
+    def session_in_start_date(self, sesh_start_id = 1):
+        sesh = self.session_history.filter(start_date_id=sesh_start_id).first()
+        # if not sesh:
+        #     return ""
+        return sesh
 
     def __unicode__(self):
         return self.email

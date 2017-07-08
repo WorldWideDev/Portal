@@ -1,0 +1,10 @@
+<label for="start_date">Select a Start Date</label>
+<select id='date' name='session'>
+    {% for date in session_start %}
+    {% if date.id == this_date_id %}
+    <option selected value="{{date.id}}">{{ date }}</option>
+    {% else %}
+    <option value="{{date.id}}">{{ date }}</option>
+    {% endif %}
+    {% endfor %}
+</select>
