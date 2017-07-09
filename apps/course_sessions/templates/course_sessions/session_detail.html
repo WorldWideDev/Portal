@@ -1,0 +1,31 @@
+{% include "templates/header.html" %}
+{% include "templates/nav.html" %}
+{% load student_session_tags %}
+<h1>{{ session.course }}</h1>
+<ul>
+    <li><strong>Instructor: </strong>{{ session.instructor.first_name }} {{ session.instructor.last_name }}</li>
+    <li><strong>Start Date: </strong>{{ session.start_date }}</li>
+    <li><strong>Lecture Link: </strong><a href="{{session.lecture_link}}">{{ session.lecture_link }}</a></li>
+</ul>
+<h2>Students in Session</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Next Session</th>
+            <th>Started Program</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in session.students.all %}
+        <tr>
+            <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
+            <td>{{ student.email }}</td>
+            <td>{% assigned_session student.id session.start_date.id 'next' %}</td>
+            <td>{{ student.starting_cohort }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include "templates/footer.html" %}

@@ -1,2 +1,8 @@
-<div class="nav">
-</div>
+<nav class="nav-style">
+    <ul>
+        <li><a href="{% url 'sessions:index' %}">Home</a></li>
+        <li><a href="{% url 'students:index' %}">Students</a></li>
+        <li><a href="{% url 'sessions:index' %}">Sessions</a></li>
+        <li><a href="{% url 'login:log_out' %}">Logout</a></li>
+    </ul>
+</nav>

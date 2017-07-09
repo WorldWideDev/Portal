@@ -11,7 +11,7 @@
         {% endfor %}
     </select>
     <input type="hidden" name='cohort_id' value='{{ session_start.id }}'>
-    <ul>
+    <ul class="filter-tab-list">
         <li><a href="{% url 'sessions:index_filter' session_start.id ass_filter.0 %}">Unassigned</a></li>
         <li><a href="{% url 'sessions:index_filter' session_start.id ass_filter.1 %}">Assigned</a></li>
     </ul>
@@ -31,8 +31,10 @@
         <tbody>
             {% for student in students %}
             <tr>
+                <!--see custom template tag @ templatetags/student_session_tags-->
+                {% assigned_session student.id session_start.id as student_session %}
                 <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
-                <td>{% assigned_session student.id session_start.id %}</td>
+                <td><a href="{% url 'sessions:show' student_session.id %}">{{ student_session }}</a></td>
                 <td><input type="checkbox" name="to_assign" value="{{ student.id }}"></td>
             </tr>
             {% endfor %}
@@ -42,5 +44,27 @@
     <input type="submit" value="Assign Student(s)">
     {% endif %}
 </form>
+{% if sessions|length > 0 %}
+    <hr>
+    <h2>Sessions This Month</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Instructor</th>
+                <th>Number of Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sesh in sessions %}
+            <tr>
+                <td><a href="{% url 'sessions:show' sesh.id %}">{{ sesh.course.name }}</a></td>
+                <td>{{ sesh.instructor.first_name }} {{ sesh.instructor.last_name }}</td>
+                <td>{{ sesh.students.all | length }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
 
 {% include "templates/footer.html" %}

@@ -5,5 +5,4 @@ from django.apps import AppConfig
 
 
 class CourseSessionsConfig(AppConfig):
-    print 'sup this is course session config'
     name = 'course_sessions'

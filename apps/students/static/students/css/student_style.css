@@ -1,0 +1,6 @@
+.student-manager {
+    width: 70%;
+}
+.student-manager > table {
+    width: 100%;
+}

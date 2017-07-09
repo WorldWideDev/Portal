@@ -1,36 +1,40 @@
 
 {% include "templates/header.html" %}
 {% include "templates/nav.html" %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'students/css/student_style.css' %}" media="screen">
+<h1>Students</h1>
+<div class="student-manager">
+    <ul class="filter-tab-list">
+        <li><a href="{% url 'students:index_filter' 'active' %}">Active</a></li>
+        <li><a href="{% url 'students:index_filter' 'paused' %}">Paused</a></li>
+        <li><a href="{% url 'students:index_filter' 'dropped' %}">Dropped</a></li>
+        <li><a href="{% url 'students:index_filter' 'all' %}">All</a></li>
+    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Current Session</th>
+                <th>Cohort Start Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
+                <td>{{ student.last_session }}</td>
+                <td>{{ student.starting_cohort }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<hr>
 <h2>Add Student</h2>
 <form action="{% url 'students:index_filter' filter %}" method="POST">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Add Student">
 </form>
-<hr>
-<h1>Students</h1>
-<ul>
-    <li><a href="{% url 'students:index_filter' 'active' %}">Active</a></li>
-    <li><a href="{% url 'students:index_filter' 'paused' %}">Paused</a></li>
-    <li><a href="{% url 'students:index_filter' 'dropped' %}">Dropped</a></li>
-    <li><a href="{% url 'students:index_filter' 'all' %}">All</a></li>
-</ul>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Current Session</th>
-            <th>Cohort Start Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for student in students %}
-        <tr>
-            <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
-            <td>{{ student.last_session }}</td>
-            <td>{{ student.starting_cohort }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 {% include "templates/footer.html" %}
 

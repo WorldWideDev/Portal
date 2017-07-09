@@ -1,3 +1,38 @@
+/*==============================================================
+====================== MAIN NAV ================================
+==============================================================*/
+
+.nav-style{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.nav-style > ul {
+    width: 98%;
+    margin: 5px auto;
+    list-style: none;
+    padding-left: 25%;
+}
+.nav-style > ul li {
+    display: inline-block;
+    margin: 10px 10px 5px;
+    border-left: 1px solid black;
+    padding-left: 20px;
+}
+.nav-style > ul li:first-child {
+    margin-left: 0;
+    border: none;
+    padding: 0;
+}
+.nav-style > ul a{
+    
+text-decoration: none;
+}
+
+
+/*==============================================================
+====================== MAIN TABLE =============================
+==============================================================*/
+
 table{
     width: 40%;
     border: 1px solid black;
@@ -7,8 +42,48 @@ thead{
     background-color: #a8a8cd;
 }
 tbody > tr:nth-child(odd){
-    background-color: #cdcdcd;
+    background-color: #d9d9d9;
 }
 td, th{
     min-width: 150px;
+}
+
+/*this a somewhat janky fix for djano's {{form.as_p}}, should customize form templating later*/
+form p{
+    margin: 0;
+}
+
+/*==============================================================
+=================== FILTER TABS ================================
+==============================================================*/
+
+/*PUT ON A UL FOR TAB STYLING*/
+.filter-tab-list {
+    margin: 0 25px;
+    width: 100%;
+    padding: 0;
+    list-style: none;
+}
+.filter-tab-list > li{
+    margin: 0px -4px -1px 10px;
+    background-color: #e3e4e4;
+    display: inline-block;
+    border: 1px solid black;
+    width: 94px;
+    text-align: center;
+    border-radius: 3px;
+}
+.filter-tab-list li:first-child {
+    margin-left: 0;
+    padding: 0;
+}
+.filter-tab-list a {
+    font-size: 1.1em;
+    text-decoration: none;
+}
+.filter-tab-list #active {
+    background-color: #909090;
+}
+.filter-tab-list #active > a {
+    color: #c4d0f0;
 }

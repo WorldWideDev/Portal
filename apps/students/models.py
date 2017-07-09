@@ -61,11 +61,12 @@ class Student(models.Model):
     def last_session(self):
         return self.session_history.last()
 
-    def session_in_start_date(self, sesh_start_id = 1):
+    def session_in_start_date(self, sesh_start_id):
         sesh = self.session_history.filter(start_date_id=sesh_start_id).first()
         # if not sesh:
         #     return ""
         return sesh
+
 
     def __unicode__(self):
         return self.email
