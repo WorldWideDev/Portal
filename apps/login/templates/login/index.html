@@ -1,7 +1,12 @@
 {% include "templates/header.html" %}
-<h1>PORTAL</h1>
-<form action='{% url "login:login" %}' method="POST">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Login">
-</form>
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'login/css/login_style.css' %}">
+<div class="logo login-box">
+    <h1>Dojo Portal</h1>
+        
+    <form action='{% url "login:login" %}' method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <input id='login-btn' type="submit" value="Login">
+    </form>
+</div>
 {% include "templates/footer.html" %}

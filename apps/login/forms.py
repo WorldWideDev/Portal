@@ -1,25 +1,25 @@
 from django.forms import ValidationError, CharField, PasswordInput
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import Instructor
 from django.core import validators
 
 class NameField(CharField):
     MIN_LENGTH = 2
-    NAME_REGEX = r'^[a-zA-Z]+$'
+    NAME_REGEX = r'^[a-zA-Z]+$|^[a-zA-Z]+ [a-zA-Z]+$'
     NameMinLengthValidator = validators.MinLengthValidator(
         MIN_LENGTH,
         "Name Fields must be %(limit_value)d or more characters long, you have %(show_value)d"
     )
     NameRegexValidator = validators.RegexValidator(
         NAME_REGEX,
-        "Names must only contain letter characters"
+        "Names must only contain letter characters, or delimiting whitespace"
     )
     def __init__(self, *args, **kwargs):
         super(NameField, self).__init__(*args, **kwargs)
         self.validators.append(NameField.NameMinLengthValidator)
         self.validators.append(NameField.NameRegexValidator)
 
-class RegistrationForm(UserCreationForm):
+class NewInstructorForm(UserCreationForm):
 
     first_name = NameField()
     last_name = NameField()
@@ -45,4 +45,13 @@ class RegistrationForm(UserCreationForm):
             'email',
             'password1',
             'password2'
+        ]
+
+class ChangeInstructorForm(UserChangeForm):
+    class Meta:
+        model = Instructor
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
         ]

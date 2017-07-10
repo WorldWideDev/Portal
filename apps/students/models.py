@@ -62,12 +62,22 @@ class Student(models.Model):
         return self.session_history.last()
 
     def session_in_start_date(self, sesh_start_id):
-        sesh = self.session_history.filter(start_date_id=sesh_start_id).first()
-        # if not sesh:
-        #     return ""
-        return sesh
+        return self.session_history.filter(start_date_id=sesh_start_id).first()
 
+    def has_rolled_back(self):
+        sesh_dict = {}
+        for sesh in self.session_history.all():
+            print sesh
+            try:
+                sesh_dict[sesh.course.id]
+                return sesh_dict[sesh.course.id]
+            except KeyError:
+                sesh_dict[sesh.course.id] = True                
+        return False
 
+    # def save(self, **kwargs):
+    #     super(Student, self).save(**kwargs)
+    
     def __unicode__(self):
         return self.email
 

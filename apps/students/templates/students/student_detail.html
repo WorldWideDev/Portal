@@ -1,25 +1,49 @@
 {% include "templates/header.html" %}
 {% include "templates/nav.html" %}
-<h2>{{ student.first_name }} {{ student.last_name }}</h2>
-<h3>{{ student.email }}</h3>
-<ul>
-    <li><span>Status:</span> {{ student.status }}</li>
-    <li><span>Current Session:</span> {{ student.current_session }}</li>
-    <li><span>Next Session:</span>X</li>
-    <li><span>Rollbacks:</span>X</li>
+{% load student_session_tags %}
+
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'students/css/student_style.css' %}" media="screen">
+
+{% current_session_id as curr_sesh_id %}
+{% assigned_session student.id curr_sesh_id as current_session %}
+{% assigned_session student.id curr_sesh_id 'next' as next_session %}
+<div class="info-block">
+    <h2>{{ student.first_name }} {{ student.last_name }}</h2>
+    <h4>{{ student.email }}</h4>
+    <a href="{% url 'students:update' student.id %}"><button>Edit Student</button></a>
+</div>
+<ul class="info-block">
+    <li><strong>Status:</strong> {{ student.status }}</li>
+    {% if current_session %}
+    <li><strong>Current Session:</strong> <a href="{% url 'sessions:details' current_session.id %}">{{ current_session }}</a></li>
+    {% else %}
+    <li><strong>Current Session:</strong> {{ current_session }}</li>
+    {% endif %}
+    {% if next_session %}
+    <li><strong>Next Session:</strong> <a href="{% url 'sessions:details' current_session.id %}">{{ next_session }}</a></li>
+    {% else %}
+    <li><strong>Next Session:</strong> {{ next_session }}</li>
+    {% endif %}
+    <li><strong>Used Rollback</strong> {{ student.has_rolled_back }}</li>
 </ul>
-<h4>Session History</h4>
-<ul>
-    {% for session in student.session_history.all %}
-    <li>{{ session }}</li>
-    {% endfor %}
-</ul>
-<h4>Aliases</h4>
-<ul>
-    {% for alias in student.aliases.all %}
-    <li><span>{{ alias.source }}</span> {{ alias.handle }}</li>
-    {% endfor %}
-</ul>
+<hr>
+<div class="info-block">
+    <h4>Session History</h4>
+    <ul id='sesh-history'>
+        {% for session in student.session_history.all %}
+        <li><a href="{% url 'sessions:details' session.id %}">{{ session }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="info-block">
+    <h4>Aliases</h4>
+    <ul>
+        {% for alias in student.aliases.all %}
+        <li><strong>{{ alias.source }}</strong> {{ alias.handle }}</li>
+        {% endfor %}
+    </ul>
+</div>
 <h5>Add Alias</h5>
 <form action="{% url 'students:create_alias' student.id %}" method="POST"\>{% csrf_token %}
     {{ alias_form.as_p }}

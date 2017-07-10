@@ -4,10 +4,20 @@ from ..students.models import Student
 from .models import Session, Cohort, Course
 from django.contrib import messages
 from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, reverse
 
 MAIN_TEMPLATE = 'course_sessions/index.html'
 
+@login_required
+def home_redirect(req):
+    sesh = Session.objects.users_current_session_or_none(req.user.id, Cohort.objects.current_cohort().id)
+    if sesh:
+        return HttpResponseRedirect(reverse("sessions:details", kwargs={"pk": sesh.id}))
+    return HttpResponseRedirect(reverse("sessions:index"))
+
+@login_required
 # this view will default to show sessions for the 'current' cohort
 def index(req, co_id=Cohort.objects.current_cohort().id, filter_kw="unassigned"):
     try:
@@ -18,7 +28,7 @@ def index(req, co_id=Cohort.objects.current_cohort().id, filter_kw="unassigned")
         next_id = Cohort.objects.next_cohort(co_id).id
     except:
         next_id = None
-
+    
     context = {
         "students": Student.objects.assignment_filter(filter_kw, co_id),
         "session_start": Cohort.objects.get(id=co_id),
@@ -29,7 +39,7 @@ def index(req, co_id=Cohort.objects.current_cohort().id, filter_kw="unassigned")
     }
     return render(req, MAIN_TEMPLATE, context)
 
-class SessionDetailView(DetailView):
+class SessionDetailView(LoginRequiredMixin, DetailView):
     model = Session
 
 def update_session(req):

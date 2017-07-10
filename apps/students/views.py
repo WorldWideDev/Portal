@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, UpdateView
 from django.shortcuts import render, HttpResponseRedirect, reverse
-from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm
-from django.contrib.auth import get_user_model
+from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm, UpdateStudentForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .view_helpers import set_context
 from .models import Student
+from django.contrib.auth.decorators import login_required
 
 INDEX_TEMPLATE = 'students/index.html'
 DETAILS_TEMPLATE = 'students/student_detail.html'
 DEFAULT_STUDENT_FILTER = 'active'
 
-class StudentsView(View):
-
+class StudentsView(LoginRequiredMixin, View):
     def get(self, req, filter=DEFAULT_STUDENT_FILTER):
 
         #helper function to initialize context with correct filter query on students
@@ -27,13 +27,35 @@ class StudentsView(View):
             form.save()
             return HttpResponseRedirect(reverse("students:index"))
         return render(req, INDEX_TEMPLATE, context)        
-        context["form"] = form 
+        context["form"] = form
 
+class UpdateStudentView(LoginRequiredMixin, UpdateView):
+    model = Student
+    form_class = UpdateStudentForm
+    template_name = 'students/student_update.html'
 
-class StudentDetailsView(DetailView):
+    def get_success_url(self):
+        return reverse("students:details", kwargs={'pk':self.get_object().id})
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        print form.data, 'is form'
+        return super(UpdateStudentView, self).form_valid(form)
+    # def post(self, req, pk):
+    #     form = UpdateStudentForm(req.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return HttpResponseRedirect(reverse("students:show", kwargs={'pk':pk}))
+    #     return render(req, self.template_name)
+
+    # def get_context_data(self, *args, **kwargs):
+    #     print self
+    #     context = super(UpdateStudentView, self).get_context_data(*args, **kwargs)
+    #     return context
+
+class StudentDetailsView(LoginRequiredMixin, DetailView):
     model = Student
     def get_context_data(self, *args, **kwargs):
-        print self.template_name
         context = super(StudentDetailsView, self).get_context_data(*args, **kwargs)
         context['alias_form'] = CreateAliasForm()
         context['note_form'] = CreateNoteForm()
@@ -43,6 +65,7 @@ class StudentDetailsView(DetailView):
         context = {
             "student": Student.objects.get(pk=pk)
         }
+        print pk
         form = CreateAliasForm(req.POST)
         if form.is_valid():
             alias = form.save(commit=False)

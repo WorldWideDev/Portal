@@ -24,9 +24,8 @@ def login_instructor(req):
     submitted = AuthenticationForm(data=req.POST)
     if submitted.is_valid():
         user = submitted.get_user()
-        #login(req, user)
-        return HttpResponseRedirect(reverse('students:index'))
-        # return reverse_lazy("students:index")
+        login(req, user)
+        return HttpResponseRedirect(reverse('sessions:home'))
     context = {
         "form": submitted
     }

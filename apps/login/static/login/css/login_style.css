@@ -1,0 +1,20 @@
+body{
+    background-color: #b4b4b4;
+}
+h1{
+    color: #fff;
+    text-shadow: #000 0px 0px 20px;
+    -webkit-font-smoothing: antialiased;
+}
+.login-box{
+    margin-top: 70px;
+    background-size: cover;
+    width: 300px;
+    height: 205px;
+    display: inline-block;
+}
+#login-btn{
+    display: block;
+    background-color: #818bff;
+    color: white;
+}

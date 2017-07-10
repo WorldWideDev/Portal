@@ -1,32 +1,45 @@
 /*==============================================================
+====================== GLOBALS =================================
+==============================================================*/
+.logo{
+    background: url('../img/logo.png');
+}
+.detail-list{
+    list-style: none;
+    margin-left: 40px;
+}
+
+
+/*==============================================================
 ====================== MAIN NAV ================================
 ==============================================================*/
 
-.nav-style{
+nav{
     width: 100%;
+    padding: 4px 0;
     margin-bottom: 20px;
+    background-color: #d8d8d8;
+    border-radius: 12px;
+    text-align: center;
 }
-.nav-style > ul {
-    width: 98%;
-    margin: 5px auto;
+nav > ul {
+    margin: 0 auto;
     list-style: none;
-    padding-left: 25%;
 }
-.nav-style > ul li {
+nav > ul li {
     display: inline-block;
-    margin: 10px 10px 5px;
+    margin: 0px -4px 0px 0px;
     border-left: 1px solid black;
-    padding-left: 20px;
+    padding: 0 30px 0 30px;
 }
-.nav-style > ul li:first-child {
-    margin-left: 0;
+nav > ul li:first-child {
     border: none;
-    padding: 0;
 }
-.nav-style > ul a{
-    
-text-decoration: none;
+nav > ul a{
+    text-decoration: none;
+    font-size: 1.3em;
 }
+
 
 
 /*==============================================================
@@ -51,6 +64,7 @@ td, th{
 /*this a somewhat janky fix for djano's {{form.as_p}}, should customize form templating later*/
 form p{
     margin: 0;
+    display: inline-block;
 }
 
 /*==============================================================
@@ -65,7 +79,7 @@ form p{
     list-style: none;
 }
 .filter-tab-list > li{
-    margin: 0px -4px -1px 10px;
+    margin: 0px -4px -1px -1px;
     background-color: #e3e4e4;
     display: inline-block;
     border: 1px solid black;

@@ -2,12 +2,12 @@
 {% include "templates/nav.html" %}
 {% load student_session_tags %}
 <h1>{{ session.course }}</h1>
-<ul>
+<ul class="detail-list">
     <li><strong>Instructor: </strong>{{ session.instructor.first_name }} {{ session.instructor.last_name }}</li>
     <li><strong>Start Date: </strong>{{ session.start_date }}</li>
     <li><strong>Lecture Link: </strong><a href="{{session.lecture_link}}">{{ session.lecture_link }}</a></li>
 </ul>
-<h2>Students in Session</h2>
+<h3>Students in Session</h3>
 <table>
     <thead>
         <tr>

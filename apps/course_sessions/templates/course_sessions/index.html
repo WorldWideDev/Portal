@@ -34,7 +34,11 @@
                 <!--see custom template tag @ templatetags/student_session_tags-->
                 {% assigned_session student.id session_start.id as student_session %}
                 <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
-                <td><a href="{% url 'sessions:show' student_session.id %}">{{ student_session }}</a></td>
+                {% if student_session != None %}
+                <td><a href="{% url 'sessions:details' student_session.id %}">{{ student_session }}</a></td>
+                {% else %}
+                <td>None</td>                
+                {% endif %}
                 <td><input type="checkbox" name="to_assign" value="{{ student.id }}"></td>
             </tr>
             {% endfor %}
@@ -58,7 +62,7 @@
         <tbody>
             {% for sesh in sessions %}
             <tr>
-                <td><a href="{% url 'sessions:show' sesh.id %}">{{ sesh.course.name }}</a></td>
+                <td><a href="{% url 'sessions:details' sesh.id %}">{{ sesh.course.name }}</a></td>
                 <td>{{ sesh.instructor.first_name }} {{ sesh.instructor.last_name }}</td>
                 <td>{{ sesh.students.all | length }}</td>
             </tr>

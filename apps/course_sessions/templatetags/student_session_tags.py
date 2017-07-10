@@ -12,8 +12,10 @@ REMEBER: you must include {% load student_session_tags %} in body of template
 
 @register.simple_tag
 def assigned_session(student_id, start_date_id, ajacency=None):
-    print ajacency, 'is adj'
     if ajacency:
-        print 'we have ajancency'
         start_date_id = Cohort.objects.adjacent_cohort(start_date_id, ajacency).id
     return Student.objects.get(id=student_id).session_in_start_date(start_date_id)
+
+@register.simple_tag
+def current_session_id():
+    return Cohort.objects.current_cohort().id

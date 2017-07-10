@@ -1,0 +1,22 @@
+{% include "templates/header.html" %}
+{% include "templates/nav.html" %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'students/css/student_style.css' %}" media="screen">
+
+<form action='{% url "students:update" student.id %}' method="POST">{% csrf_token %}
+    {% for field in form %}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+    </div>
+    {% endfor %}
+    <hr>
+    <input type="submit" value="Update">
+</form>
+<a href="{% url 'students:details' student.id %}"><button>Cancel</button></a>
+{% include "templates/footer.html" %}

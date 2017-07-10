@@ -1,6 +1,32 @@
 .student-manager {
-    width: 70%;
+    width: 80%;
 }
 .student-manager > table {
     width: 100%;
+}
+#id_session_history{
+    list-style: none;
+}
+form .submit{
+    display: block;
+}
+.form-group {
+    display: inline-block;
+    width: 400px;
+    vertical-align: top;
+}
+ul {
+    list-style: none;
+}
+.info-block {
+    display: inline-block;
+    vertical-align: top;
+    width: 375px;
+}
+ul.info-block{
+    margin-top: 15px;
+}
+#sesh-history{
+    overflow-y: scroll;
+    width: 200px;
 }

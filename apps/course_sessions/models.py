@@ -18,6 +18,10 @@ class CohortManager(models.Manager):
         if ajacency == 'next':
             return self.next_cohort(id)
         return self.previous_cohort(id)
+
+class SessionManager(models.Manager):
+    def users_current_session_or_none(self, user_id, start_date_id):
+        return self.filter(start_date=start_date_id).filter(instructor=user_id).first()
         
 
 class Cohort(models.Model):
@@ -43,7 +47,8 @@ class Session(models.Model):
     start_date = models.ForeignKey(Cohort)
     lecture_link = models.CharField(max_length=100)
     course = models.ForeignKey(Course)
-    instructor = models.ForeignKey(Instructor)
+    instructor = models.ForeignKey(Instructor, related_name="sessions")
+    objects = SessionManager()
     def __unicode__(self):
         return "{} ({})".format(self.course, self.start_date.starting_date.strftime("%m/%d/%Y")) 
     
