@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from django.core.cache import cache
 from django.views.generic import View, DetailView, UpdateView
 from django.shortcuts import render, HttpResponseRedirect, reverse
 from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm, UpdateStudentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .view_helpers import set_context
+from django.contrib.auth import get_user_model
+from .view_helpers import set_context, update_student_cache
 from .models import Student
 from django.contrib.auth.decorators import login_required
 
 INDEX_TEMPLATE = 'students/index.html'
 DETAILS_TEMPLATE = 'students/student_detail.html'
 DEFAULT_STUDENT_FILTER = 'active'
+STUDENTS_CACHE_KEY = "all_students"
 
 class StudentsView(LoginRequiredMixin, View):
     def get(self, req, filter=DEFAULT_STUDENT_FILTER):
@@ -25,6 +28,7 @@ class StudentsView(LoginRequiredMixin, View):
         form = CreateStudentForm(req.POST)
         if form.is_valid():
             form.save()
+            update_student_cache()
             return HttpResponseRedirect(reverse("students:index"))
         return render(req, INDEX_TEMPLATE, context)        
         context["form"] = form
