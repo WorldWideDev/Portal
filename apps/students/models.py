@@ -6,11 +6,6 @@ from ..login.models import Instructor
 
 # might consider making this a query set class rather than manager
 class StudentManager(models.Manager):
-    def student_filter(self, **kwargs):
-        if str(kwargs['filter']) != 'all':
-            return self.filter(status=str(kwargs['filter']))
-        return self.all()
-
     def add_to_session(self, data):
         students = data.getlist('to_assign')
         sesh_id = int(data['session'])
@@ -24,14 +19,6 @@ class StudentManager(models.Manager):
                 student.session_history.remove(conflict)
 
             student.session_history.add(sesh_id)
-
-    def assignment_filter(self, filter_kw, start_id):
-        return self.filter(session_history__start_date_id = start_id) \
-            if str(filter_kw) == "assigned" else \
-            self.exclude(session_history__start_date_id = start_id)
-
-    
-
 
 class Student(models.Model):
     ACTIVE = 'active'
@@ -80,8 +67,6 @@ class Student(models.Model):
     
     def __unicode__(self):
         return self.email
-
-    objects = StudentManager()
 
 class Alias(models.Model):
     handle = models.CharField(max_length=100)

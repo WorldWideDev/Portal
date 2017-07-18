@@ -138,3 +138,5 @@ STATICFILES_DIRS = [
 ]
 
 
+# Cache Global Config Variables
+TIMEOUT = 86400 #In seconds
