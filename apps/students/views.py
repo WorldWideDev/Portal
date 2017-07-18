@@ -6,7 +6,7 @@ from django.shortcuts import render, HttpResponseRedirect, reverse
 from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm, UpdateStudentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
-from .view_helpers import set_context, update_student_cache
+from .view_helpers import set_context
 from .models import Student
 from django.contrib.auth.decorators import login_required
 
@@ -28,7 +28,10 @@ class StudentsView(LoginRequiredMixin, View):
         form = CreateStudentForm(req.POST)
         if form.is_valid():
             form.save()
-            update_student_cache()
+
+            #Update cache after adding a new sutdent model
+            Student.objects.update_student_cache()
+            
             return HttpResponseRedirect(reverse("students:index"))
         return render(req, INDEX_TEMPLATE, context)        
         context["form"] = form

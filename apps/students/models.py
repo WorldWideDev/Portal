@@ -1,11 +1,28 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
+from django.core.cache import cache
 from ..course_sessions.models import Session, Cohort
 from ..login.models import Instructor
 
+STUDENTS_CACHE_KEY = "all_students"
+
+
+
 # might consider making this a query set class rather than manager
 class StudentManager(models.Manager):
+    def student_filter(self, **kwargs):
+        # Initialize cache if not already defined
+        cached_students = cache.get(STUDENTS_CACHE_KEY)
+        if not cached_students:
+            cached_students = self.update_student_cache()
+
+        if str(kwargs['filter']) != 'all':
+            choice = [item[1] for item in Student.STATUS_CHOICES if item[0] == filter]
+            cached_students = [S for S in cached_students if S.status == choice]
+        return cached_students
+        # Can Potentially Cache the Filtered results as well
+
     def add_to_session(self, data):
         students = data.getlist('to_assign')
         sesh_id = int(data['session'])
@@ -19,6 +36,16 @@ class StudentManager(models.Manager):
                 student.session_history.remove(conflict)
 
             student.session_history.add(sesh_id)
+
+    def assignment_filter(self, filter_kw, start_id):
+        return self.filter(session_history__start_date_id = start_id) \
+            if str(filter_kw) == "assigned" else \
+            self.exclude(session_history__start_date_id = start_id)
+
+    def update_student_cache(self):
+        students = self.all()
+        cache.set(STUDENTS_CACHE_KEY, students)
+        return students
 
 class Student(models.Model):
     ACTIVE = 'active'
@@ -44,7 +71,7 @@ class Student(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     starting_cohort = models.ForeignKey(Cohort)
     session_history = models.ManyToManyField(Session, related_name='students', blank=True)
-
+    objects = StudentManager()
     def last_session(self):
         return self.session_history.last()
 
