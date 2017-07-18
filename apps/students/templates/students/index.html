@@ -6,10 +6,10 @@
 <h1>Students</h1>
 <div class="student-manager">
     <ul class="filter-tab-list">
-        <li><a href="{% url 'students:index_filter' 'active' %}">Active</a></li>
-        <li><a href="{% url 'students:index_filter' 'paused' %}">Paused</a></li>
-        <li><a href="{% url 'students:index_filter' 'dropped' %}">Dropped</a></li>
-        <li><a href="{% url 'students:index_filter' 'all' %}">All</a></li>
+        <li><button class="filter-button" filter="active">Active</button></li>
+        <li><button class="filter-button" filter="paused">Paused</button></li>
+        <li><button class="filter-button" filter="dropped">Dropped</button></li>
+        <li><button class="filter-button" filter="all">All</button></li>
     </ul>
     <table>
         <thead>
@@ -19,14 +19,8 @@
                 <th>Cohort Start Date</th>
             </tr>
         </thead>
-        <tbody>
-            {% for student in students %}
-            <tr>
-                <td><a href="{% url 'students:details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></td>
-                <td>{{ student.last_session }}</td>
-                <td>{{ student.starting_cohort }}</td>
-            </tr>
-            {% endfor %}
+        <tbody id="student-table">
+        <!-- Content to be filled by partial -->
         </tbody>
     </table>
 </div>
@@ -38,3 +32,42 @@
 </form>
 {% include "templates/footer.html" %}
 
+<script>
+//Default AJAX Get method
+function AjaxGet(url, callback) {
+  let http = new XMLHttpRequest();
+  http.onreadystatechange = () => {
+    if (http.readyState === XMLHttpRequest.DONE && http.status === 200) {
+        callback(http);
+    } else if (http.status != 200 && http.status != 0) {
+        console.log("Error: Request returned with error code " + http.status);
+        console.log(http.responseText);
+    }
+  }
+  http.open('GET', url, true);
+  http.send();
+}
+
+function updatedStudentsTable(url){
+    AjaxGet(url, (xmlHttp) => {
+        //Take the response html and add it to the table body
+        let tableContent = document.getElementById("student-table");
+        tableContent.innerHTML = xmlHttp.responseText;
+    })
+}
+
+//On click of a differnt filter button retreive student info
+let filterButtons = document.getElementsByClassName("filter-button");
+console.log(filterButtons);
+Array.from(filterButtons).forEach((button) => {
+    button.addEventListener('click', (e) => {
+        filterStr = e.srcElement.attributes["filter"].value;
+        url = "get_students/"; //Need to refactor this to not be absolute
+        url += filterStr;
+        updatedStudentsTable(url);
+    }, false);
+})
+
+//Immediately invoke call to get all Active students
+updatedStudentsTable("get_students/active");
+</script>

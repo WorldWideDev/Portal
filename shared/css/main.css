@@ -83,7 +83,6 @@ form p{
     background-color: #e3e4e4;
     display: inline-block;
     border: 1px solid black;
-    width: 94px;
     text-align: center;
     border-radius: 3px;
 }
@@ -91,9 +90,10 @@ form p{
     margin-left: 0;
     padding: 0;
 }
-.filter-tab-list a {
-    font-size: 1.1em;
+.filter-tab-list button {
+    border: none;
     text-decoration: none;
+    margin: 0px;
 }
 .filter-tab-list #active {
     background-color: #909090;

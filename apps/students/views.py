@@ -2,16 +2,18 @@
 from __future__ import unicode_literals
 from django.core.cache import cache
 from django.views.generic import View, DetailView, UpdateView
-from django.shortcuts import render, HttpResponseRedirect, reverse
-from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm, UpdateStudentForm
+from django.template.loader import render_to_string
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
+from .forms import CreateStudentForm, CreateAliasForm, CreateNoteForm, UpdateStudentForm
 from .view_helpers import set_context
 from .models import Student
 from django.contrib.auth.decorators import login_required
 
 INDEX_TEMPLATE = 'students/index.html'
 DETAILS_TEMPLATE = 'students/student_detail.html'
+STUDENT_TABLE_TEMPLATE = 'students/student_table_partial.html'
 DEFAULT_STUDENT_FILTER = 'active'
 STUDENTS_CACHE_KEY = "all_students"
 
@@ -83,6 +85,14 @@ class StudentDetailsView(LoginRequiredMixin, DetailView):
 
             return render(req, DETAILS_TEMPLATE, context)
         return HttpResponseRedirect(reverse("students:details", kwargs={'pk':pk}))
+
+class GetStudents(LoginRequiredMixin, View):
+    def get(self, req, filter=DEFAULT_STUDENT_FILTER):
+
+        #helper function to initialize context with correct filter query on students
+        context = set_context(filter)
+        partial = render_to_string(STUDENT_TABLE_TEMPLATE, context)
+        return HttpResponse(partial)
 
 def create_alias(req, pk):
     if req.POST:
