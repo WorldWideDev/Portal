@@ -12,14 +12,14 @@ MAIN_TEMPLATE = 'course_sessions/index.html'
 
 @login_required
 def home_redirect(req):
-    sesh = Session.objects.users_current_session_or_none(req.user.id, Cohort.objects.current_cohort().id)
+    sesh = Session.objects.users_current_session_or_none(req.user.id, Cohort.objects.current_cohort_id())
     if sesh:
         return HttpResponseRedirect(reverse("sessions:details", kwargs={"pk": sesh.id}))
     return HttpResponseRedirect(reverse("sessions:index"))
 
 @login_required
 # this view will default to show sessions for the 'current' cohort
-def index(req, co_id=Cohort.objects.current_cohort().id, filter_kw="unassigned"):
+def index(req, co_id=Cohort.objects.current_cohort_id(), filter_kw="unassigned"):
     try:
         prev_id = Cohort.objects.previous_cohort(co_id).id
     except:

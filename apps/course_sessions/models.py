@@ -6,8 +6,11 @@ from django.utils.timezone import now
 from ..login.models import Instructor
 
 class CohortManager(models.Manager):
-    def current_cohort(self):
-        return self.filter(starting_date__lt = now()).last()
+    def current_cohort_id(self):
+        #TODO(dev): current implementation here required at least one instace of Cohort
+        #or app will break.  This can be done in /admin, but thats a lil janky (but do we care?)
+        return self.filter(starting_date__lt = now()).last().id
+        
     def previous_cohort(self, id):
         this_cohort_starts = self.get(id=id).starting_date
         return self.filter(starting_date__lt = this_cohort_starts).last()
