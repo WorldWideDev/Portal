@@ -21,7 +21,7 @@
     <li><strong>Current Session:</strong> {{ current_session }}</li>
     {% endif %}
     {% if next_session %}
-    <li><strong>Next Session:</strong> <a href="{% url 'sessions:details' current_session.id %}">{{ next_session }}</a></li>
+    <li><strong>Next Session:</strong> <a href="{% url 'sessions:details' next_session.id %}">{{ next_session }}</a></li>
     {% else %}
     <li><strong>Next Session:</strong> {{ next_session }}</li>
     {% endif %}
@@ -57,7 +57,15 @@
     {% for note in student.notes.all %}
         <div class="note">
             <h6>{{note.content}}</h6>
-            <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
+            {% load tz %}
+
+            {% localtime on %}
+                <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
+            {% endlocaltime %}
+
+            {% localtime off %}
+                <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
+            {% endlocaltime %}
         </div>
     {% endfor %}
 </div>

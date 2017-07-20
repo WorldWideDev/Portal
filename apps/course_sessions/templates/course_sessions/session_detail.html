@@ -5,7 +5,7 @@
 <ul class="detail-list">
     <li><strong>Instructor: </strong>{{ session.instructor.first_name }} {{ session.instructor.last_name }}</li>
     <li><strong>Start Date: </strong>{{ session.start_date }}</li>
-    <li><strong>Lecture Link: </strong><a href="{{session.lecture_link}}">{{ session.lecture_link }}</a></li>
+    <li><strong>Lecture Link: </strong><a href="{{session.course.lecture_link}}">{{ session.course.lecture_link }}</a></li>
 </ul>
 <h3>Students in Session</h3>
 <table>

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,6 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '0un=+3)pxdpfv=*cslie(%bd6gf04)=)t__65w0(uu7!qz6=c$'
+# from easy_timezones.middleware import load_db_settings
+# print load_db_settings()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,6 +34,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # https://github.com/Miserlou/django-easy-timezones
+    'easy_timezones',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'easy_timezones.middleware.EasyTimezoneMiddleware',
 ]
 
 # MIDDLEWARE_CLASSES = [
@@ -126,6 +132,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# GEOIP_DATABASE = '../shared/data/GeoLiteCity.dat'
+# GEOIPV6_DATABASE = '/path/to/your/geoip/database/GeoLiteCityv6.dat'
 
 
 # Static files (CSS, JavaScript, Images)

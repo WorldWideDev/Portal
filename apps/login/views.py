@@ -13,6 +13,8 @@ LOGIN_TEMPLATE = 'login/index.html'
 
 # @login_not_required
 def index(req):
+    if(req.user.id):
+        return HttpResponseRedirect(reverse("sessions:home"))
     context = {
         'form': AuthenticationForm()
     }
@@ -20,7 +22,6 @@ def index(req):
 
 # @login_not_required
 def login_instructor(req):
-    print req
     submitted = AuthenticationForm(data=req.POST)
     if submitted.is_valid():
         user = submitted.get_user()

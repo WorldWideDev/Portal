@@ -39,13 +39,13 @@ class ParentCourse(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    lecture_link = models.CharField(max_length=100)
     parent = models.ForeignKey(ParentCourse)
     def __unicode__(self):
         return self.name
 
 class Session(models.Model):
     start_date = models.ForeignKey(Cohort)
-    lecture_link = models.CharField(max_length=100)
     course = models.ForeignKey(Course)
     instructor = models.ForeignKey(Instructor, related_name="sessions")
     objects = SessionManager()
