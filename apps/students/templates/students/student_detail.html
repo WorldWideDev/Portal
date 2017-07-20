@@ -57,15 +57,7 @@
     {% for note in student.notes.all %}
         <div class="note">
             <h6>{{note.content}}</h6>
-            {% load tz %}
-
-            {% localtime on %}
-                <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
-            {% endlocaltime %}
-
-            {% localtime off %}
-                <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
-            {% endlocaltime %}
+            <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
         </div>
     {% endfor %}
 </div>
