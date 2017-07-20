@@ -26,9 +26,9 @@ class StudentManager(models.Manager):
             student.session_history.add(sesh_id)
 
     def assignment_filter(self, filter_kw, start_id):
-        return self.filter(session_history__start_date_id = start_id) \
+        return self.filter(session_history__start_date_id = start_id).filter(status='active') \
             if str(filter_kw) == "assigned" else \
-            self.exclude(session_history__start_date_id = start_id)
+            self.exclude(session_history__start_date_id = start_id).filter(status='active')
 
     
 
