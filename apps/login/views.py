@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, reverse, HttpResponseRedirect
 from privateviews.decorators import login_not_required
 
-
 LOGIN_TEMPLATE = 'login/index.html'
 # DASHBOARD_TEMPLATE = 'login/dashboard.html'
 
