@@ -7,6 +7,7 @@
 #id_session_history{
     list-style: none;
 }
+
 form .submit{
     display: block;
 }
@@ -21,12 +22,45 @@ ul {
 .info-block {
     display: inline-block;
     vertical-align: top;
-    width: 375px;
+    width: 45%;
 }
 ul.info-block{
     margin-top: 15px;
 }
 #sesh-history{
     overflow-y: scroll;
-    width: 200px;
+    width: 250px;
+    border: 2px solid black;
+    max-height: 400px;
+}
+#sesh-history a{
+    font-size: 1.3em;
+}
+#sesh-history li{
+    padding: 5px;
+    margin: 0;
+}
+#note-form textarea{
+    width: 100%;
+    display: block;
+    height: 100px;
+}
+.notes{
+    /* width: 80%; */
+    max-height: 400px;
+    min-height: 100px;
+    overflow-y: scroll;
+    border: 2px solid black;
+}
+.note h6{
+    margin: 0;
+}
+.note:nth-child(odd), #sesh-history li:nth-child(odd){
+    background-color: #D6D6D6;
+}
+.note:nth-child(even), #sesh-history li:nth-child(even){
+    background-color: #EAEAEA;
+}
+.note{
+    padding: 15px;
 }

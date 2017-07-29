@@ -42,7 +42,8 @@ class CreateAliasForm(ModelForm):
 class CreateNoteForm(ModelForm):
     content = forms.CharField(
         min_length=5, 
-        label = "Leave a Note"
+        label = "Leave a Note",
+        widget=forms.Textarea()
     )
     class Meta:
         model = Note

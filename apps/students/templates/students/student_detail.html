@@ -43,21 +43,21 @@
         <li><strong>{{ alias.source }}</strong> {{ alias.handle }}</li>
         {% endfor %}
     </ul>
+    <h5>Add Alias</h5>
+    <form action="{% url 'students:create_alias' student.id %}" method="POST"\>{% csrf_token %}
+        {{ alias_form.as_p }}
+        <input type="submit" value="Add Alias">
+    </form>
 </div>
-<h5>Add Alias</h5>
-<form action="{% url 'students:create_alias' student.id %}" method="POST"\>{% csrf_token %}
-    {{ alias_form.as_p }}
-    <input type="submit" value="Add Alias">
-</form>
-    <form action="{% url 'students:create_note' student.id %}" method="POST"\>{% csrf_token %}
-    {{ note_form.as_p }}
+<form id='note-form' action="{% url 'students:create_note' student.id %}" method="POST"\>{% csrf_token %}
+    {{ note_form }}
     <input type="submit" value="Add Note">
 </form>
 <div class='notes'>
     {% for note in student.notes.all %}
         <div class="note">
-            <h6>{{note.content}}</h6>
-            <h6>Noted By: {{ note.instructor.first_name }} {{ note.instructor.last_name }} ({{ note.created_at }})</h6>
+            <h5>{{note.content}}</h5>
+            <h6>Noted By:<strong> {{ note.instructor.first_name }} {{ note.instructor.last_name }} </strong>({{ note.created_at }})</h6>
         </div>
     {% endfor %}
 </div>
