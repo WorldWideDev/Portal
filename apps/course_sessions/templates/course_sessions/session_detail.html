@@ -28,4 +28,10 @@
         {% endfor %}
     </tbody>
 </table>
+<hr>
+<h4>Email Students</h4>
+<form action='{% url "sessions:email_students" session.id %}' method="POST">{% csrf_token %}
+    {{ email_form }}
+    <input type="submit" value="Send">
+</form>
 {% include "templates/footer.html" %}

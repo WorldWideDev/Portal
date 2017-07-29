@@ -3,6 +3,7 @@
 {% load student_session_tags %}
 <h1>Manage Sessions for {{ session_start }}</h1>
 <span>{% if prev_id %}<a href="{% url 'sessions:index_pattern' prev_id %}">Prev</a>{% endif %} | {% if next_id %}<a href="{% url 'sessions:index_pattern' next_id %}">Next</a>{% endif %}</span>
+<a href="{% url 'sessions:email' %}"><button type="">SEND EMAIL</button></a>
 <form action='{% url "sessions:update_session" %}' method="POST">{% csrf_token %}
     <label for="start_date">Select a Session</label>
     <select name='session'>

@@ -25,6 +25,7 @@ def login_instructor(req):
     if submitted.is_valid():
         user = submitted.get_user()
         login(req, user)
+        print user.email
         return HttpResponseRedirect(reverse('sessions:home'))
     context = {
         "form": submitted

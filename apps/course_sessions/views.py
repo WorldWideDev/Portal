@@ -4,8 +4,10 @@ from ..students.models import Student
 from .models import Session, Cohort, Course
 from django.contrib import messages
 from django.views.generic import DetailView
+from .forms import EmailStudentsInSessionForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from ..login.mailz import send_the_mail, send_the_mail_2
 from django.shortcuts import render, HttpResponseRedirect, reverse
 
 MAIN_TEMPLATE = 'course_sessions/index.html'
@@ -41,6 +43,16 @@ def index(req, co_id=Cohort.objects.current_cohort_id(), filter_kw="unassigned")
 
 class SessionDetailView(LoginRequiredMixin, DetailView):
     model = Session
+    def get_context_data(self, *args, **kwargs):
+        context = super(SessionDetailView, self).get_context_data(*args, **kwargs)
+        context['email_form'] = EmailStudentsInSessionForm()
+        print context
+        return context
+    def post(self, req, pk):
+        print pk
+        form = EmailStudentsInSessionForm(req.POST)
+        print form.is_valid()
+        return HttpResponseRedirect(reverse("sessions:details", kwargs={'pk':pk}))
 
 def update_session(req):
     try: 
@@ -54,4 +66,14 @@ def update_session(req):
             "courses": Course.objects.all()
         }
         return render(req, MAIN_TEMPLATE, context)
+    return HttpResponseRedirect(reverse("sessions:index"))
+
+def email(req):
+    send_the_mail(
+        req.user.email,
+        "XXXXXX",
+        'XXXX@gmail.com',
+        "SUP DOGG"
+    )
+    # send_the_mail_2("SUP GUD", "dnewsom@codingdojo.com")
     return HttpResponseRedirect(reverse("sessions:index"))
