@@ -5,8 +5,8 @@ from django.contrib import admin
 from .models import Instructor
 from django.contrib.auth.admin import UserAdmin
 from .forms import NewInstructorForm, ChangeInstructorForm
-from ..students.models import Student, Cohort, Note
-from ..course_sessions.models import Session, Course, ParentCourse
+from ..students.models import Student, Note, Alias
+from ..course_sessions.models import Session, Course, ParentCourse, Cohort
 from django.utils.translation import gettext, gettext_lazy as _
 # Register your models here.
 
@@ -33,6 +33,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(Instructor, CustomUserAdmin)
 admin.site.register(Student)
 admin.site.register(Note)
+admin.site.register(Alias)
 admin.site.register(Cohort)
 admin.site.register(Session)
 admin.site.register(Course)
