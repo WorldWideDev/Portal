@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-# from ..students.models import Student
+from ..students.models import Student
 from .models import Session, Cohort, Course
 from django.contrib import messages
 from django.views.generic import DetailView
@@ -8,8 +8,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, reverse, HttpResponse
 from django.apps.registry import apps
-
-# Session apps.get_model('')
 
 MAIN_TEMPLATE = 'course_sessions/index.html'
 
