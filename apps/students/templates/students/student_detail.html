@@ -40,7 +40,11 @@
     <h4>Aliases</h4>
     <ul>
         {% for alias in student.aliases.all %}
-        <li><strong>{{ alias.source }}</strong> {{ alias.handle }}</li>
+        {% if alias.source|lower == 'github' %}
+            <li><strong>{{ alias.source }}</strong> <a href="http://github.com/{{ alias.handle }}">{{ alias.handle }}</a></li>        
+        {% else %}
+            <li><strong>{{ alias.source }}</strong> {{ alias.handle }}</li>
+        {% endif %}
         {% endfor %}
     </ul>
     <h5>Add Alias</h5>

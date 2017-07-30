@@ -1,11 +1,12 @@
 {% include "templates/header.html" %}
 {% include "templates/nav.html" %}
 {% load student_session_tags %}
+{% load staticfiles %}
 <h1>Manage Sessions for {{ session_start }}</h1>
 <span>{% if prev_id %}<a href="{% url 'sessions:index_pattern' prev_id %}">Prev</a>{% endif %} | {% if next_id %}<a href="{% url 'sessions:index_pattern' next_id %}">Next</a>{% endif %}</span>
 <form action='{% url "sessions:update_session" %}' method="POST">{% csrf_token %}
     <label for="start_date">Select a Session</label>
-    <select name='session'>
+    <select onchange="updateLink()" id='session-picker' name='session'>
         {% for sesh in sessions %}
         <option value="{{sesh.id}}">{{ sesh }}</option>
         {% endfor %}
@@ -70,5 +71,6 @@
         </tbody>
     </table>
 {% endif %}
+<!-- <script src="{% static 'course_sessions/js/choose_selected_session.js' %}"></script> -->
 
 {% include "templates/footer.html" %}

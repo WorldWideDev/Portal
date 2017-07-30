@@ -31,7 +31,7 @@ def index(req, co_id=Cohort.objects.current_cohort_id(), filter_kw="unassigned")
         next_id = None
     
     context = {
-        # "students": Student.objects.assignment_filter(filter_kw, co_id),
+        "students": Student.objects.assignment_filter(filter_kw, co_id),
         "session_start": Cohort.objects.get(id=co_id),
         "sessions": Session.objects.filter(start_date_id=co_id),
         "prev_id": prev_id,
